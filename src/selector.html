@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root{
+      --pink:#d81b60;
+      --pink2:#ad1457;
+      --card:#faf7f8;
+      --muted:#777;
+      --shadow:0 10px 30px rgba(0,0,0,.12);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,sans-serif;background:#fff;color:#222}
+    .modal{padding:16px}
+    .headerTop{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+    }
+    .title{margin:0;font-size:18px;font-weight:900}
+
+    .phoneField{
+      margin:4px 0 10px;
+      background:#fff;
+      border:1px solid rgba(0,0,0,.12);
+      border-radius:12px;
+      padding:8px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .phoneField label{
+      font-size:11px;
+      font-weight:800;
+      color:#666;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+    }
+    .phoneField input{
+      border:1px solid rgba(0,0,0,.14);
+      border-radius:8px;
+      padding:6px 8px;
+      font-size:13px;
+      outline:none;
+    }
+
+    .dateRow{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin:6px 0 12px;
+    }
+    .dateField{
+      background:#fff;
+      border:1px solid rgba(0,0,0,.12);
+      border-radius:12px;
+      padding:8px 10px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .dateField label{
+      font-size:11px;
+      font-weight:800;
+      color:#666;
+      text-transform:uppercase;
+      letter-spacing:.3px;
+    }
+    .dateField input{
+      border:1px solid rgba(0,0,0,.14);
+      border-radius:8px;
+      padding:6px 8px;
+      font-size:13px;
+      outline:none;
+    }
+
+    .cartToggle{
+      background: linear-gradient(90deg, var(--pink) 0%, #ff6fa3 100%);
+      color:#fff;border-radius:var(--radius);
+      padding:14px 16px;box-shadow:var(--shadow);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      cursor:pointer; user-select:none;
+      font-weight:900;
+    }
+    .pill{
+      background:rgba(255,255,255,.20);
+      padding:6px 10px;border-radius:999px;font-size:12px;
+      font-weight:800;
+    }
+
+    .cartPanel{
+      margin-top:10px;
+      border:1px solid rgba(216,27,96,.15);
+      background:#fff7fb;
+      border-radius:14px;
+      padding:10px;
+      display:none;
+    }
+    .cartPanel.open{display:block}
+    .cartHead{
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+      margin-bottom:8px;
+    }
+    .cartHead h4{margin:0;font-size:14px;color:#b40053;}
+    .btnDanger{
+      border:none;border-radius:10px;padding:8px 10px;cursor:pointer;
+      background:#ffe6ef;color:#b40053;font-weight:800;
+    }
+    .cartList{
+      max-height:170px;overflow:auto;display:flex;flex-direction:column;gap:6px;
+    }
+    .cartItem{
+      display:flex;justify-content:space-between;align-items:center;gap:8px;
+      background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:10px;padding:8px;
+      font-size:13px;
+    }
+    .cartItemName{
+      font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px;
+    }
+    .cartItemMeta{color:#555;font-size:12px}
+    .cartRemove{
+      border:none;background:#fff;border-radius:8px;cursor:pointer;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);padding:4px 7px;
+    }
+
+    .search{
+      margin-top:12px;background:#fff;border-radius:14px;
+      box-shadow:0 6px 18px rgba(0,0,0,.08);
+      padding:10px 12px;display:flex;gap:10px;align-items:center
+    }
+    .search input{width:100%;border:none;outline:none;font-size:14px}
+
+    .list{
+      margin-top:12px;display:flex;flex-direction:column;gap:10px;
+      max-height:380px;overflow:auto;padding-right:4px
+    }
+    .item{
+      background:var(--card);border-radius:16px;padding:12px;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;
+      border:1px solid rgba(0,0,0,.05)
+    }
+    .left{display:flex;gap:10px;align-items:center;min-width:0}
+    .icon{
+      width:40px;height:40px;border-radius:12px;background:rgba(216,27,96,.10);
+      display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto
+    }
+    .meta{min-width:0}
+    .name{
+      font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px
+    }
+    .price{color:var(--pink);font-weight:800;font-size:13px;margin-top:2px}
+    .unit{color:var(--muted);font-size:11px;margin-left:6px;font-weight:400}
+    .badge{
+      margin-left:8px;font-size:11px;color:#fff;background:var(--pink2);
+      padding:2px 8px;border-radius:999px;font-weight:800
+    }
+
+    .qty{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+    .btn{
+      width:34px;height:34px;border:none;border-radius:10px;background:#fff;
+      cursor:pointer;font-size:18px;box-shadow:0 3px 10px rgba(0,0,0,.08)
+    }
+    .qty input{
+      width:54px;padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,.15);
+      font-weight:800;text-align:center;outline:none;background:#fff;
+      appearance: textfield; -moz-appearance:textfield;
+    }
+    .qty input::-webkit-outer-spin-button,
+    .qty input::-webkit-inner-spin-button{
+      -webkit-appearance:none; margin:0;
+    }
+
+    .footer{
+      margin-top:12px;background:#fff;border-radius:var(--radius);
+      box-shadow:var(--shadow);padding:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px
+    }
+    .summary{font-size:12px;color:var(--muted)}
+    .total{font-size:18px;font-weight:900}
+    .cta{
+      margin-top:10px;width:100%;border:none;border-radius:16px;padding:14px;
+      background: linear-gradient(90deg, var(--pink) 0%, #ff6fa3 100%);
+      color:#fff;font-size:15px;font-weight:900;cursor:pointer;box-shadow:var(--shadow);
+      display:flex;justify-content:center;align-items:center;gap:10px
+    }
+    .cta:disabled{opacity:.5;cursor:not-allowed}
+
+    .confirmBackdrop{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.38);z-index:999;
+      padding:16px;
+    }
+    .confirmBackdrop.open{display:flex}
+
+    .phoneConfirmBackdrop{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+      background:rgba(0,0,0,.38);z-index:1000;
+      padding:16px;
+    }
+    .phoneConfirmBackdrop.open{display:flex}
+    .confirmCard{
+      width:min(420px,100%);
+      border-radius:18px;
+      background:#fff;
+      box-shadow:0 14px 42px rgba(0,0,0,.22);
+      padding:16px;
+      border:1px solid rgba(216,27,96,.2);
+      animation:popIn .14s ease-out;
+    }
+    @keyframes popIn {
+      from{transform:translateY(6px) scale(.98);opacity:.75}
+      to{transform:translateY(0) scale(1);opacity:1}
+    }
+    .confirmTitle{margin:0 0 6px;font-size:18px;color:#ad1457}
+    .confirmText{margin:0 0 14px;color:#444;line-height:1.35}
+    .confirmActions{display:flex;gap:8px;justify-content:flex-end}
+    .btnGhost,
+    .btnPink{
+      border:none;border-radius:12px;padding:10px 14px;cursor:pointer;font-weight:800;
+    }
+    .btnGhost{background:#f4f4f4;color:#444}
+    .btnPink{background:linear-gradient(90deg,#d81b60 0%,#ff6fa3 100%);color:#fff}
+  </style>
+</head>
+
+<body>
+  <div class="modal">
+    <div class="headerTop">
+      <h2 class="title"></h2>
+    </div>
+
+    <div class="phoneField">
+      <label for="telefonoCliente">📱 Número de teléfono</label>
+      <input id="telefonoCliente" type="tel" inputmode="numeric" placeholder="Ej. 9611234567" />
+    </div>
+
+    <div class="dateRow">
+      <div class="dateField">
+        <label for="fechaPedido">📅 Inicio de pedido</label>
+        <input id="fechaPedido" type="date" />
+      </div>
+      <div class="dateField">
+        <label for="fechaEntrega">🚚 Fecha de entrega</label>
+        <input id="fechaEntrega" type="date" />
+      </div>
+    </div>
+
+    <div class="cartToggle" id="cartToggle">
+      <span>🛍️ Carrito de compra</span>
+      <div class="pill" id="pill">0 productos</div>
+    </div>
+
+    <div class="cartPanel" id="cartPanel">
+      <div class="cartHead">
+        <h4>🧺 Carrito seleccionado</h4>
+        <button class="btnDanger" id="clearAllBtn">🗑️ Vaciar todo</button>
+      </div>
+      <div class="cartList" id="cartList"></div>
+    </div>
+
+    <div class="search">
+      🔎 <input id="q" placeholder="Buscar producto..." />
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <div class="footer">
+      <div>
+        <div class="summary" id="summary">0 productos en selección</div>
+        <div class="total" id="total">$0.00</div>
+      </div>
+      <div class="summary">PZ</div>
+    </div>
+
+    <button class="cta" id="save" disabled>🛒 Guardar selección</button>
+  </div>
+
+  <div class="confirmBackdrop" id="clearConfirm">
+    <div class="confirmCard">
+      <h3 class="confirmTitle">🧹 Vaciar carrito</h3>
+      <p class="confirmText">¿Seguro que quieres quitar todos los productos seleccionados?</p>
+      <div class="confirmActions">
+        <button class="btnGhost" id="clearCancelBtn">Cancelar</button>
+        <button class="btnPink" id="clearConfirmBtn">Sí, vaciar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="phoneConfirmBackdrop" id="phoneConfirm">
+    <div class="confirmCard">
+      <h3 class="confirmTitle">📱 Teléfono no capturado</h3>
+      <p class="confirmText">No capturaste número de teléfono. ¿Deseas guardar de todos modos?</p>
+      <div class="confirmActions">
+        <button class="btnGhost" id="phoneCancelBtn">Cancelar</button>
+        <button class="btnPink" id="phoneConfirmBtn">Guardar sin teléfono</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const fmt = new Intl.NumberFormat('es-MX', { style:'currency', currency:'MXN' });
+
+    function iconFor(name){
+      const n = (name || '').toLowerCase();
+      if (n.includes('gorra')) return '🧢';
+      if (n.includes('mochila') || n.includes('bolsa')) return '🎒';
+      if (n.includes('playera') || n.includes('sudadera')) return '👕';
+      if (n.includes('camisa')) return '👔';
+      if (n.includes('pantalon') || n.includes('pants')) return '👖';
+      if (n.includes('pañalero')) return '🍼';
+      if (n.includes('taza') || n.includes('ceram')) return '☕';
+      if (n.includes('termo') || n.includes('vaso')) return '🥤';
+      if (n.includes('botella')) return '🍶';
+      if (n.includes('sticker') || n.includes('calca')) return '🏷️';
+      if (n.includes('llavero')) return '🔑';
+      if (n.includes('banner') || n.includes('lona')) return '🪧';
+      if (n.includes('tarjeta') || n.includes('invitacion')) return '💌';
+      if (n.includes('cojin') || n.includes('almohada')) return '🛏️';
+      if (n.includes('rompecabezas')) return '🧩';
+      return '🧾';
+    }
+
+    function toggleClearConfirm(open) {
+      const dialog = document.getElementById('clearConfirm');
+      dialog.classList.toggle('open', open);
+    }
+
+    function togglePhoneConfirm(open) {
+      const dialog = document.getElementById('phoneConfirm');
+      dialog.classList.toggle('open', open);
+    }
+
+    function priceTier(item, qty){
+      const q = Number(qty) || 0;
+      if (q >= 12 && item.precio12 > 0) return { p: item.precio12, tag: '12+' };
+      if (q >= 6  && item.precio6  > 0) return { p: item.precio6,  tag: '6+' };
+      return { p: item.precioBase, tag: '' };
+    }
+
+    let items = [];
+    const state = new Map();
+    const rowDom = new Map();
+    const itemsByName = new Map();
+
+    function buildList(filtered){
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+      rowDom.clear();
+
+      filtered.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'item';
+
+        const left = document.createElement('div');
+        left.className = 'left';
+
+        const icon = document.createElement('div');
+        icon.className = 'icon';
+        icon.textContent = iconFor(item.nombre);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+
+        const name = document.createElement('div');
+        name.className = 'name';
+        name.textContent = item.nombre;
+
+        const price = document.createElement('div');
+        price.className = 'price';
+        price.textContent = fmt.format(item.precioBase) + ' ';
+
+        const unit = document.createElement('span');
+        unit.className = 'unit';
+        unit.textContent = item.unidad || 'PZ';
+
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.style.display = 'none';
+
+        price.appendChild(unit);
+        price.appendChild(badge);
+        meta.appendChild(name);
+        meta.appendChild(price);
+
+        left.appendChild(icon);
+        left.appendChild(meta);
+
+        const qtyBox = document.createElement('div');
+        qtyBox.className = 'qty';
+
+        const minus = document.createElement('button');
+        minus.className = 'btn';
+        minus.textContent = '−';
+
+        const qtyInput = document.createElement('input');
+        qtyInput.type = 'number';
+        qtyInput.min = '0';
+        qtyInput.step = '1';
+        qtyInput.value = String(state.get(item.nombre) || 0);
+
+        const plus = document.createElement('button');
+        plus.className = 'btn';
+        plus.textContent = '+';
+
+        minus.onclick = () => setQty(item, Math.max(0, (Number(qtyInput.value)||0) - 1), false);
+        plus.onclick  = () => setQty(item, (Number(qtyInput.value)||0) + 1, false);
+
+        qtyInput.addEventListener('input', () => {
+          const v = Math.max(0, Number(qtyInput.value) || 0);
+          setQty(item, v, true);
+        });
+
+        qtyBox.appendChild(minus);
+        qtyBox.appendChild(qtyInput);
+        qtyBox.appendChild(plus);
+
+        row.appendChild(left);
+        row.appendChild(qtyBox);
+        list.appendChild(row);
+
+        rowDom.set(item.nombre, { qtyInput, priceEl: price, badgeEl: badge, item });
+        refreshRow(item.nombre);
+      });
+
+      updateSummary();
+    }
+
+    function setQty(item, qty, fromInput){
+      const q = Math.max(0, Number(qty) || 0);
+      if (q === 0) state.delete(item.nombre);
+      else state.set(item.nombre, q);
+
+      const dom = rowDom.get(item.nombre);
+      if (dom && !fromInput) dom.qtyInput.value = String(q);
+
+      refreshRow(item.nombre);
+      updateSummary();
+    }
+
+    function refreshRow(nombre){
+      const dom = rowDom.get(nombre);
+      if (!dom) return;
+
+      const qty = state.get(nombre) || 0;
+      const tier = priceTier(dom.item, qty);
+
+      dom.priceEl.childNodes[0].nodeValue = fmt.format(tier.p) + ' ';
+
+      if (tier.tag){
+        dom.badgeEl.style.display = 'inline-block';
+        dom.badgeEl.textContent = tier.tag;
+      } else {
+        dom.badgeEl.style.display = 'none';
+      }
+    }
+
+    function renderCartPanel(){
+      const cartList = document.getElementById('cartList');
+      cartList.innerHTML = '';
+
+      const selected = Array.from(state.entries()).filter(([,qty]) => qty > 0);
+      if (!selected.length){
+        cartList.innerHTML = '<div class="summary">No hay productos en carrito.</div>';
+        return;
+      }
+
+      selected.forEach(([nombre, qty]) => {
+        const item = itemsByName.get(nombre);
+        const tier = item ? priceTier(item, qty) : { p: 0, tag: '' };
+        const subtotal = qty * tier.p;
+
+        const row = document.createElement('div');
+        row.className = 'cartItem';
+        row.innerHTML = `
+          <div>
+            <div class="cartItemName">${nombre}</div>
+            <div class="cartItemMeta">${qty} x ${fmt.format(tier.p)} = ${fmt.format(subtotal)} ${tier.tag ? `(${tier.tag})` : ''}</div>
+          </div>
+        `;
+
+        const remove = document.createElement('button');
+        remove.className = 'cartRemove';
+        remove.textContent = '🗑️';
+        remove.title = 'Quitar del carrito';
+        remove.onclick = () => setQty({ nombre }, 0, false);
+
+        row.appendChild(remove);
+        cartList.appendChild(row);
+      });
+    }
+
+    function updateSummary(){
+      let countItems = 0;
+      let total = 0;
+
+      for (const [nombre, qty] of state.entries()){
+        if (qty > 0){
+          countItems++;
+          const item = itemsByName.get(nombre);
+          if (!item) continue;
+          const tier = priceTier(item, qty);
+          total += qty * tier.p;
+        }
+      }
+
+      document.getElementById('pill').textContent = `${countItems} productos`;
+      document.getElementById('summary').textContent = `${countItems} productos en selección`;
+      document.getElementById('total').textContent = fmt.format(total);
+      document.getElementById('save').disabled = (countItems === 0);
+
+      renderCartPanel();
+    }
+
+    function applyFilter(){
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      const filtered = items.filter(x => x.nombre.toLowerCase().includes(q));
+      buildList(filtered);
+    }
+
+    document.getElementById('q').addEventListener('input', () => {
+      clearTimeout(window.__t);
+      window.__t = setTimeout(applyFilter, 120);
+    });
+
+    document.getElementById('cartToggle').addEventListener('click', () => {
+      document.getElementById('cartPanel').classList.toggle('open');
+    });
+
+    document.getElementById('clearAllBtn').addEventListener('click', () => {
+      toggleClearConfirm(true);
+    });
+
+    document.getElementById('clearCancelBtn').addEventListener('click', () => {
+      toggleClearConfirm(false);
+    });
+
+    document.getElementById('clearConfirmBtn').addEventListener('click', () => {
+      state.clear();
+      buildList(items);
+      updateSummary();
+      toggleClearConfirm(false);
+    });
+
+    document.getElementById('clearConfirm').addEventListener('click', (e) => {
+      if (e.target.id === 'clearConfirm') toggleClearConfirm(false);
+    });
+
+    document.getElementById('save').addEventListener('click', () => {
+      const seleccion = [];
+      for (const [nombre, qty] of state.entries()){
+        if (qty > 0) seleccion.push({ nombre, cantidad: qty });
+      }
+
+      const telefono = document.getElementById('telefonoCliente').value.trim();
+      const fechaPedido = document.getElementById('fechaPedido').value;
+      const fechaEntrega = document.getElementById('fechaEntrega').value;
+
+      if (!fechaPedido || !fechaEntrega) {
+        alert('Selecciona la fecha de inicio de pedido y la fecha de entrega antes de guardar.');
+        return;
+      }
+
+      const guardarSeleccion = () => {
+        const btn = document.getElementById('save');
+        btn.disabled = true;
+        btn.textContent = '⏳ Guardando...';
+
+        google.script.run
+          .withSuccessHandler(() => google.script.host.close())
+          .withFailureHandler((err) => {
+            alert('Error: ' + (err?.message || err));
+            btn.disabled = false;
+            btn.textContent = '🛒 Guardar selección';
+          })
+          .guardarSeleccionProductos({
+            items: seleccion,
+            telefono,
+            fechaPedido,
+            fechaEntrega
+          });
+      };
+
+      if (!telefono) {
+        togglePhoneConfirm(true);
+
+        const onConfirm = () => {
+          cleanup();
+          togglePhoneConfirm(false);
+          guardarSeleccion();
+        };
+
+        const onCancel = () => {
+          cleanup();
+          togglePhoneConfirm(false);
+        };
+
+        const onBackdrop = (e) => {
+          if (e.target.id === 'phoneConfirm') onCancel();
+        };
+
+        const cleanup = () => {
+          document.getElementById('phoneConfirmBtn').removeEventListener('click', onConfirm);
+          document.getElementById('phoneCancelBtn').removeEventListener('click', onCancel);
+          document.getElementById('phoneConfirm').removeEventListener('click', onBackdrop);
+        };
+
+        document.getElementById('phoneConfirmBtn').addEventListener('click', onConfirm);
+        document.getElementById('phoneCancelBtn').addEventListener('click', onCancel);
+        document.getElementById('phoneConfirm').addEventListener('click', onBackdrop);
+        return;
+      }
+
+      guardarSeleccion();
+    });
+
+    function cargarTodoInicial() {
+      google.script.run
+        .withSuccessHandler((sel) => {
+          const pre = (sel && sel.items) ? sel.items : [];
+          document.getElementById('telefonoCliente').value = (sel && sel.telefono) ? sel.telefono : '';
+          document.getElementById('fechaPedido').value = (sel && sel.fechaPedido) ? sel.fechaPedido : '';
+          document.getElementById('fechaEntrega').value = (sel && sel.fechaEntrega) ? sel.fechaEntrega : '';
+
+          pre.forEach(x => {
+            const q = Number(x.cantidad) || 0;
+            if (q > 0) state.set(x.nombre, q);
+          });
+
+          google.script.run
+            .withSuccessHandler((data) => {
+              items = (data || []).map(x => ({
+                nombre: x.nombre,
+                precioBase: Number(x.precioBase) || 0,
+                unidad: x.unidad || 'PZ',
+                precio6: Number(x.precio6) || 0,
+                precio12: Number(x.precio12) || 0
+              }));
+
+              itemsByName.clear();
+              items.forEach(it => itemsByName.set(it.nombre, it));
+
+              buildList(items);
+              updateSummary();
+            })
+            .obtenerInventarioParaUI();
+        })
+        .obtenerSeleccionActualParaUI();
+    }
+
+    cargarTodoInicial();
+  </script>
+</body>
+</html>
