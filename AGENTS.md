@@ -308,4 +308,5 @@ Si el usuario NO especifica modo:
 - Usar /HYBRID por defecto si mezcla negocio + sistema.
 - Usar /DEV si es claramente técnico.
 - Usar /BB si es claramente de proceso/operación.
+
 Solo preguntar si hay ambigüedad real.
