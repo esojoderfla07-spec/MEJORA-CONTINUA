@@ -1,0 +1,183 @@
+KPIS - LOTO Sublimación
+
+PROPÓSITO
+Definir los indicadores clave para controlar el proceso, detectar desperdicios, medir desempeño y priorizar mejoras.
+
+1. PRINCIPIOS
+Los KPIs deben:
+- servir para tomar decisiones
+- ser simples de calcular
+- salir de la hoja Base
+- actualizarse con frecuencia definida
+- mostrar problemas reales del flujo
+
+No medir por medir.
+
+2. FUENTE PRINCIPAL DE DATOS
+La fuente de verdad es la hoja Base.
+
+Campos mínimos recomendados:
+- folio
+- fecha de pedido
+- fecha compromiso
+- fecha real de entrega
+- cliente
+- teléfono
+- tipo de documento
+- total
+- anticipo
+- saldo
+- responsable
+- estatus
+- retrabajo
+- error administrativo
+- motivo de atraso
+
+3. KPIS DE OPERACIÓN
+
+3.1 Pedidos capturados
+Definición: cantidad de pedidos registrados en un periodo.
+Fórmula: conteo de folios por día / semana / mes.
+Objetivo: medir carga de trabajo real.
+
+3.2 Pedidos confirmados
+Definición: pedidos que ya pueden entrar formalmente al flujo.
+Fórmula: conteo de registros con estatus CONFIRMADO.
+Objetivo: separar cotizaciones de trabajo comprometido.
+
+3.3 Pedidos en proceso
+Definición: pedidos activos que no han sido entregados ni cerrados.
+Fórmula: conteo de estatus distintos de ENTREGADO, CERRADO, CANCELADO.
+Objetivo: medir WIP.
+
+3.4 Pedidos atrasados
+Definición: pedidos cuya fecha compromiso ya pasó y no están entregados.
+Fórmula: fecha_compromiso < hoy y estatus != ENTREGADO/CERRADO.
+Objetivo: detectar incumplimiento.
+
+3.5 Tiempo promedio de ciclo
+Definición: tiempo desde captura hasta entrega.
+Fórmula: fecha_real_entrega - fecha_pedido.
+Objetivo: medir velocidad del sistema.
+
+3.6 Tiempo por fase
+Definición: tiempo promedio por cada estatus del flujo.
+Requisito: guardar fecha/hora de entrada a cada estado.
+Objetivo: encontrar cuellos de botella.
+
+4. KPIS DE CALIDAD
+
+4.1 Pedidos con error de captura
+Definición: pedidos que requirieron corrección por datos mal capturados.
+Fórmula: conteo de registros con error_administrativo = SI.
+Objetivo: medir defectos administrativos.
+
+4.2 Pedidos con retrabajo
+Definición: pedidos que tuvieron que rehacerse o corregirse después de iniciados.
+Fórmula: conteo de registros con retrabajo = SI.
+Objetivo: medir fallas del proceso.
+
+4.3 Cambios de fecha de entrega
+Definición: pedidos cuya fecha compromiso fue modificada.
+Fórmula: conteo de pedidos con cambio registrado en fecha.
+Objetivo: detectar inestabilidad del flujo.
+
+4.4 Tasa de defectos administrativos
+Fórmula:
+(pedidos con error de captura / pedidos totales) * 100
+Objetivo: ver tendencia de errores.
+
+5. KPIS FINANCIEROS
+
+5.1 Ventas totales
+Definición: suma de ventas por periodo.
+Fórmula: suma de columna total.
+Objetivo: medir volumen económico.
+
+5.2 Ticket promedio
+Fórmula:
+ventas totales / número de pedidos
+Objetivo: medir valor promedio por orden.
+
+5.3 Anticipo promedio
+Fórmula: promedio de columna anticipo.
+Objetivo: medir disciplina comercial y flujo de caja.
+
+5.4 Saldo pendiente total
+Fórmula: suma de columna saldo.
+Objetivo: controlar cobranza pendiente.
+
+5.5 Porcentaje de pedidos con anticipo
+Fórmula:
+(pedidos con anticipo > 0 / pedidos totales) * 100
+Objetivo: medir adopción de política de anticipo.
+
+6. KPIS DE SERVICIO
+
+6.1 Entregas a tiempo
+Fórmula:
+(pedidos entregados en o antes de fecha compromiso / pedidos entregados) * 100
+Objetivo: medir cumplimiento.
+
+6.2 Tiempo de respuesta de cotización a confirmación
+Definición: cuánto tarda una cotización en convertirse en pedido confirmado.
+Fórmula: fecha_confirmación - fecha_cotización.
+Objetivo: medir velocidad comercial.
+
+6.3 Pedidos urgentes
+Definición: pedidos con ventana corta entre captura y entrega.
+Objetivo: controlar presión operativa.
+
+7. PRIORIDAD DE IMPLEMENTACIÓN
+
+Fase 1
+- pedidos capturados
+- pedidos confirmados
+- ventas totales
+- ticket promedio
+- anticipo promedio
+- pedidos atrasados
+
+Fase 2
+- tiempo de ciclo
+- entregas a tiempo
+- defectos administrativos
+- retrabajos
+- saldo pendiente
+
+Fase 3
+- tiempo por fase
+- tasa de conversión cotización -> confirmado
+- análisis por responsable
+- análisis por tipo de producto
+
+8. FRECUENCIA DE REVISIÓN
+
+Diario
+- pedidos capturados
+- pedidos en proceso
+- pedidos atrasados
+- listos para entregar
+
+Semanal
+- ventas
+- ticket promedio
+- entregas a tiempo
+- errores
+- retrabajos
+
+Mensual
+- tendencia de defectos
+- tendencia de atraso
+- top productos
+- top clientes
+- desempeño por responsable
+
+9. REGLA DE USO
+Todo KPI debe responder:
+- qué problema ayuda a ver
+- qué decisión habilita
+- quién lo revisa
+- qué acción se toma si sale mal
+
+Si no responde eso, no es útil.

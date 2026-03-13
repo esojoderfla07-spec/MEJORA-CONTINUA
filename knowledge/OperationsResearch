@@ -1,0 +1,17 @@
+
+Operations Research / Investigación de operaciones (Hillier & Lieberman)
+
+Descripción general:
+* La investigación de operaciones (OR) es un enfoque científico para la toma de decisiones y la optimización de recursos. Aplica modelos matemáticos y métodos analíticos para mejorar la eficiencia y reducir costoshttps://pravin-hub-rgb.github.io/BCA/resources/sem5/ot/unit1/index.html#:~:text=,computers%20in%20solving%20OR%20problems.
+* OR utiliza técnicas de optimización para encontrar soluciones óptimas, maximizando o minimizando objetivos sujetos a restriccioneshttps://pravin-hub-rgb.github.io/BCA/resources/sem5/ot/unit1/index.html#:~:text=,met%2C%20and%20constraints%20are%20respected.
+* Su ámbito es amplio: procesos de manufactura, logística, salud, transporte y servicios financieroshttps://pravin-hub-rgb.github.io/BCA/resources/sem5/ot/unit1/index.html#:~:text=,both%20operational%20and%20strategic%20contexts.
+
+Aplicación para la microempresa:
+* Formular problemas de decisión (p. ej., selección de proveedores, planificación de rutas, asignación de recursos) como modelos matemáticos.
+* Emplear programación lineal, programación entera y simulación para resolver problemas de producción discreta y cadena de suministro.
+* Integrar métodos de optimización en herramientas de IA para apoyar decisiones en tiempo real y reducir variabilidad.
+
+Roles del agente:
+* **Modelador OR:** define variables, objetivos y restricciones para traducir problemas de negocio en modelos cuantitativos.
+* **Especialista en optimización:** aplica algoritmos (simplex, heurísticas, metaheurísticas) para resolver modelos y recomendar acciones.
+* **Analista de simulación:** construye simulaciones de eventos discretos para evaluar políticas de producción y logística bajo incertidumbre.

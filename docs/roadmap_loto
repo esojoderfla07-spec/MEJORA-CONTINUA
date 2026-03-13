@@ -1,0 +1,172 @@
+ROADMAP - LEAN-PRODUCTION / LOTO Sublimación
+
+PROPÓSITO
+Definir la evolución del proyecto por fases, manteniendo orden entre mejora de procesos y desarrollo técnico.
+
+VISIÓN GENERAL
+Esta repo existe para diseñar la lógica de mejora del negocio:
+- procesos
+- indicadores
+- Kanban
+- prioridades
+- decisiones
+
+La otra repo implementa el código.
+
+FASE 1 - FUNDAMENTOS DEL SISTEMA
+Objetivo:
+Estabilizar la captura y generación documental.
+
+Ya logrado:
+- captura desde selector
+- guardado en Base
+- generación de nota/factura/cotización
+- exportación PDF
+
+Entregables:
+- flujo básico estable
+- Base como fuente de verdad
+- README y AGENTS definidos
+
+FASE 2 - CONTROL DEL FLUJO
+Objetivo:
+Hacer visible el estatus del pedido.
+
+Acciones:
+- definir estados oficiales
+- definir reglas de transición
+- registrar responsable
+- agregar fecha real de entrega
+- detectar pedidos atrasados
+
+Entregables:
+- documento kanban
+- columna estatus funcional en Base
+- hoja Kanban inicial
+
+FASE 3 - MEDICIÓN
+Objetivo:
+Empezar a tomar decisiones con datos.
+
+Acciones:
+- definir KPIs prioritarios
+- documentar fórmula y origen del dato
+- construir tablas dinámicas
+- crear primera hoja de indicadores
+
+Entregables:
+- documento kpis
+- tablero básico de indicadores
+- métricas semanales
+
+FASE 4 - GESTIÓN DIARIA
+Objetivo:
+Convertir el sistema en herramienta de operación diaria.
+
+Acciones:
+- revisar Kanban diario
+- revisar pedidos atrasados
+- revisar pedidos listos para entregar
+- revisar errores y retrabajos
+- establecer rutina semanal de seguimiento
+
+Entregables:
+- tablero diario
+- tablero semanal
+- rutina de revisión
+
+FASE 5 - MEJORA CONTINUA
+Objetivo:
+Usar DMAIC para atacar problemas reales.
+
+Acciones:
+- identificar cuellos de botella
+- analizar retrabajos
+- analizar defectos administrativos
+- rediseñar formularios o reglas
+- simplificar flujo
+
+Entregables:
+- log de mejoras
+- acciones correctivas
+- documentación de causa raíz
+
+FASE 6 - AUTOMATIZACIÓN AVANZADA
+Objetivo:
+Reducir trabajo manual y aumentar trazabilidad.
+
+Acciones:
+- alertas de atraso
+- alertas de saldo pendiente
+- cambio automático de indicadores
+- filtros por responsable
+- dashboards más ejecutivos
+
+Entregables:
+- reportes automáticos
+- seguimiento visual más fuerte
+- integración con herramientas externas si aplica
+
+FASE 7 - DECISIONES ESTRATÉGICAS
+Objetivo:
+Usar datos para crecimiento del negocio.
+
+Acciones:
+- analizar top productos
+- analizar top clientes
+- analizar ticket promedio
+- analizar conversión cotización -> pedido
+- analizar carga por responsable
+- analizar cumplimiento de entrega
+
+Entregables:
+- tablero ejecutivo
+- decisiones de capacidad
+- decisiones comerciales
+
+PRIORIZACIÓN INMEDIATA
+Lo siguiente que debe hacerse primero es:
+1. estados oficiales del pedido
+2. reglas del Kanban
+3. fecha real de entrega
+4. KPIs básicos
+5. tablero de atrasos
+6. revisión semanal
+
+REGLA DE GOBERNANZA ENTRE REPOS
+
+Esta repo
+Define:
+- lógica de proceso
+- criterios
+- prioridades
+- tableros
+- indicadores
+- roadmap
+
+Repo de código
+Implementa:
+- Apps Script
+- estructura técnica
+- automatizaciones
+- fórmulas auxiliares
+- vistas y reportes
+
+CRITERIO DE PRIORIDAD
+Toda nueva iniciativa debe responder:
+- ¿mejora control?
+- ¿mejora visibilidad?
+- ¿mejora velocidad?
+- ¿reduce errores?
+- ¿reduce retrabajo?
+- ¿genera mejor información para decidir?
+
+Si no responde sí a uno de estos puntos, no es prioridad.
+
+META FINAL
+Pasar de un sistema de notas a un sistema de gestión operativa con:
+- flujo visible
+- KPIs útiles
+- seguimiento diario
+- mejora continua
+- decisiones basadas en datos

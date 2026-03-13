@@ -1,0 +1,21 @@
+
+Toyota Production System (Taiichi Ohno)
+
+Descripción general:
+- Principios: eliminación de desperdicios y búsqueda de la máxima eficiencia.
+- Dos pilares: Just‑in‑Time (JIT) y Jidoka (automatización con toque humano).
+  - JIT sincroniza los procesos para producir solo lo necesario, cuando se necesita y en la cantidad necesariahttps://global.toyota/en/company/vision-and-philosophy/production-system/#:~:text=The%20basic%20philosophy%20of%20the,and%20in%20the%20amount%20needed; reduce inventarios y acorta los tiempos de entregahttps://global.toyota/en/company/vision-and-philosophy/production-system/#:~:text=Toyota%20Production%20System%20A%20production,of%20the%20most%20efficient%20methods.
+  - Jidoka permite detener inmediatamente la línea al detectarse una anormalidad, evitando la producción de defectos y liberando al personal de vigilar máquinashttps://global.toyota/en/company/vision-and-philosophy/production-system/#:~:text=The%20basic%20philosophy%20of%20the,and%20in%20the%20amount%20needed.
+- La filosofía de TPS se mantiene mediante trabajo estandarizado y kaizen (mejora continua)https://www.lean.org/lexicon-terms/toyota-production-system/#:~:text=The%20production%20system%20developed%20by,PDCA%2C%20or%20the%20scientific%20method.
+- Fue desarrollado por Taiichi Ohno durante los años 1950 y 1960 y se divulgó posteriormente a toda la cadena de suministro de Toyotahttps://www.lean.org/lexicon-terms/toyota-production-system/#:~:text=Development%20of%20TPS%20is%20credited,General.
+
+Aplicación para la microempresa:
+- Identificar y clasificar desperdicios (muda), sobrecarga (muri) y variabilidad (mura) en las operaciones.
+- Implementar flujos de trabajo continuos y sistemas pull para reducir inventarios.
+- Incorporar mecanismos de jidoka en procesos físicos y sistemas de IA: parada automática ante errores, alarmas y andon digitales.
+- Documentar y estandarizar las mejores prácticas; promover eventos kaizen para mejorar procesos.
+
+Roles del agente:
+- **Analista Lean:** analiza datos de producción para detectar desperdicio y propone mejoras.
+- **Facilitador JIT:** ajusta planes de producción y suministro para alinearlos con la demanda en tiempo real.
+- **Monitor de calidad:** configura sistemas de detección temprana de anomalías y coordina acciones correctivas.
