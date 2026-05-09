@@ -1,6 +1,6 @@
 /**
  * config.gs - Configuración Maestra LOTO 2026
- * Centraliza coordenadas, IDs y nombres de hojas.
+ * Centraliza nombres de hojas, coordenadas de columnas e IDs de carpetas.
  */
 
 const CFG = {
@@ -48,9 +48,9 @@ const CFG = {
     CELDA_TOTAL: 'E24'
   },
 
-  // IDs de carpetas en Google Drive
+  // IDs de carpetas en Google Drive para exportación
   PDF: {
-    FOLDER_ID: '1pVW-moG52ka3mwelTOzqpkPPieh8bmub', // Carpeta Notas
+    FOLDER_ID: '1pVW-moG52ka3mwelTOzqpkPPieh8bmub', 
     FACTURA_FOLDER_ID: '1pVW-moG52ka3mwelTOzqpkPPieh8bmub',
     COTIZACION_FOLDER_ID: '1Rl3W4_2X2z8Wskq0f3E7-4aNyH_1Rv9m'
   }
