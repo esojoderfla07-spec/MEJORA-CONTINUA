@@ -1,7 +1,7 @@
 # AI WORKING RULES – LOTO SUBLIMACIÓN
 (AGENTS.md – Reference Document)
 
-Objetivo: estabilidad, claridad, mejora continua y soluciones reales con enfoque de ingeniería para el negocio.
+Objetivo: estabilidad, claridad, mejora continua y soluciones reales con enfoque de ingeniería industrial/sistemas para el negocio.
 Se busca código funcional y mantenible (no “bonito” por estética), con mejoras incrementales y medibles.
 
 --------------------------------------------------
@@ -58,7 +58,7 @@ Antes de escribir código o proponer cambios, la IA debe confirmar (o pedir) est
 - Nombre EXACTO de las hojas (respetar mayúsculas/acentos):
   - "Base"
   - "Inventario"
-  - "Nota" (presentación/diseño)
+  - "Nota, factura, cotizacion" (presentación/diseño)
 - Rangos clave (usar los reales del proyecto):
   - Subtotales: Hoja1!E14:E22 = B * D
   - Cantidades: Hoja1!B14:B22
@@ -231,7 +231,191 @@ La IA debe aportar valor extra con mejoras prácticas:
 Regla de oro: toda mejora debe ser incremental, medible y con riesgo bajo.
 
 --------------------------------------------------
+**7.2 KANBAN - LOTO Sublimación**
 
+PROPÓSITO
+Definir el flujo visual oficial del pedido para controlar el trabajo en curso, detectar atrasos y estandarizar el proceso.
+
+1. OBJETIVO
+El Kanban debe permitir:
+- saber en qué etapa está cada pedido
+- saber quién es responsable
+- identificar atrasos
+- limitar trabajo en curso
+- evitar que los pedidos avancen sin cumplir reglas
+
+2. FUENTE DEL KANBAN
+La fuente de verdad es la hoja Base.
+
+El tablero Kanban debe construirse a partir de la columna:
+- estatus_pedido
+
+Y debe apoyarse en:
+- folio
+- cliente
+- fecha pedido
+- fecha compromiso
+- total
+- anticipo
+- responsable
+- observaciones
+
+3. ESTADOS OFICIALES
+
+3.1 COTIZACIÓN
+El cliente aún no confirma el pedido.
+No debe entrar a producción.
+
+3.2 PENDIENTE ANTICIPO
+El cliente aceptó, pero falta pago o validación comercial.
+
+3.3 CONFIRMADO
+El pedido ya está liberado para avanzar.
+
+3.4 EN DISEÑO
+Se trabaja en arte, ajuste o validación visual.
+
+3.5 EN PRODUCCIÓN
+El pedido ya entró a ejecución.
+
+3.6 EN ACABADO
+El trabajo principal terminó y pasa a detalle, revisión o terminación.
+
+3.7 LISTO PARA ENTREGAR
+El pedido está terminado y disponible para entrega.
+
+3.8 ENTREGADO
+El cliente ya recibió el pedido.
+
+3.9 CERRADO
+Pedido finalizado administrativamente.
+
+3.10 CANCELADO
+Pedido cancelado.
+
+3.11 RETRABAJO
+Pedido que regresó por corrección o falla.
+
+4. REGLAS DE TRANSICIÓN
+
+COTIZACIÓN -> PENDIENTE ANTICIPO
+Cuando el cliente acepta la propuesta.
+
+PENDIENTE ANTICIPO -> CONFIRMADO
+Cuando se cumple condición comercial definida.
+
+CONFIRMADO -> EN DISEÑO
+Cuando el pedido está completo y listo para trabajo previo.
+
+EN DISEÑO -> EN PRODUCCIÓN
+Cuando el diseño fue validado/liberado.
+
+EN PRODUCCIÓN -> EN ACABADO
+Cuando termina proceso principal.
+
+EN ACABADO -> LISTO PARA ENTREGAR
+Cuando se concluye revisión final.
+
+LISTO PARA ENTREGAR -> ENTREGADO
+Cuando el cliente recibe el producto.
+
+ENTREGADO -> CERRADO
+Cuando se liquida saldo y ya no hay pendientes.
+
+Cualquier estado -> RETRABAJO
+Cuando aparece defecto, corrección o rehacer.
+
+Cualquier estado -> CANCELADO
+Cuando el pedido se cancela formalmente.
+
+5. REGLAS DE BLOQUEO
+Un pedido no debe avanzar si:
+- no tiene folio
+- no tiene cliente o referencia válida
+- no tiene fecha compromiso
+- no tiene productos definidos
+- no cumple condición de anticipo cuando aplique
+- no tiene responsable
+- no tiene información suficiente para ejecutarse
+
+6. CAMPOS MÍNIMOS POR TARJETA
+Cada tarjeta del Kanban debe mostrar:
+- folio
+- cliente
+- fecha compromiso
+- total
+- anticipo/saldo
+- responsable
+- alerta visual si está atrasado
+
+7. SEÑALES VISUALES SUGERIDAS
+
+Verde
+Pedido dentro de tiempo y en flujo normal.
+
+Amarillo
+Pedido próximo a vencer o detenido.
+
+Rojo
+Pedido atrasado o en retrabajo.
+
+8. REGLAS OPERATIVAS
+
+8.1 Trabajo en curso
+No saturar etapas con más trabajo del que el equipo puede atender.
+
+8.2 Revisión diaria
+El Kanban debe revisarse todos los días.
+
+8.3 Un solo estatus vigente
+Cada pedido debe tener un solo estado principal.
+
+8.4 Todo cambio debe quedar registrado
+Guardar:
+- fecha del cambio
+- responsable
+- estado anterior
+- estado nuevo
+
+9. INDICADORES DERIVADOS DEL KANBAN
+Del tablero deben salir:
+- pedidos por estado
+- pedidos atrasados por estado
+- tiempo promedio por estado
+- retrabajos por estado
+- carga por responsable
+
+10. ORDEN DE IMPLEMENTACIÓN
+
+Fase 1
+- definir estados
+- usar columna estatus en Base
+- registrar responsable
+
+Fase 2
+- mostrar tablero básico en hoja Kanban
+- colorear por estado
+- marcar atrasos
+
+Fase 3
+- guardar fecha de entrada a cada estado
+- medir tiempo por fase
+- filtrar por responsable
+
+Fase 4
+- automatizar alertas
+- dashboard visual
+- análisis de cuellos de botella
+
+11. REGLA FINAL
+El Kanban no es decoración.
+Debe servir para decidir:
+- qué se hace hoy
+- qué está detenido
+- qué va atrasado
+- qué requiere intervención
+
+--------------------------------------------------
 ## 8. CUANDO HAYA DUDA
 
 1) Preferir la solución más simple
@@ -270,19 +454,32 @@ Formato:
 - Código limpio
 - Checklist de implementación
 
-### /BB  (Black Belt Lean Six Sigma)
-Prioridades:
-1. Flujo del negocio antes que tecnología
-2. Reducir desperdicio (Lean)
-3. Detectar cuellos de botella
-4. Proponer mejoras prácticas
-5. Medir con KPIs simples
+### /BB (Black Belt Lean Six Sigma)
+Enfoque: Optimización del flujo de valor y eliminación radical de desperdicios (Muda).
 
-Formato:
-- Observación del proceso
-- Problema raíz probable
-- Mejora recomendada
-- Acción inmediata aplicable
+Prioridades:
+
+Flujo sobre Tecnología: La herramienta debe servir al proceso, no al revés.
+
+Eliminación de Desperdicios: Detectar sobreprocesos, esperas y defectos.
+
+Poka-Yoke Mental: Diseñar procesos que impidan el error humano antes de que ocurra.
+
+Visibilidad (Andon): Si algo se detiene o se desvía del estándar, debe ser evidente.
+
+KPIs de Impacto: Medir Ciclo Total, Tiempo de Entrega y % de Calidad.
+
+Formato de Respuesta:
+
+Observación del Proceso: Descripción objetiva de lo que sucede hoy en el taller/hoja de cálculo.
+
+Problema Raíz (5 Whys): El motivo real por el cual hay retrasos o errores.
+
+Mejora Lean Recomendada: Propuesta basada en estandarización o flujo continuo.
+
+Acción Inmediata (Quick Win): Qué cambio podemos hacer en el código o en el taller hoy mismo.
+
+Impacto Estimado: Beneficio esperado en tiempo, dinero o reducción de errores.
 
 ### /HYBRID  (Ingeniería Industrial + Código)
 Combina optimización del negocio + implementación técnica ligera.
