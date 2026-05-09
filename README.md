@@ -1,255 +1,64 @@
-# LOTO Sublimación – Sistema de notas y pedidos
+# LOTO Sublimación – Sistema de Notas y Pedidos
 
-Sistema operativo para capturar pedidos en Google Sheets, guardar la información en la hoja **Base**, consultar precios desde **Inventario**, y generar/exportar PDF a Google Drive.  
-Este proyecto usa **Google Apps Script + Google Sheets + HTML (HtmlService)**. No es una app web tradicional.
+Sistema operativo integral para capturar pedidos en Google Sheets, centralizar la información en la hoja **Base**, gestionar precios desde **Inventario**, y automatizar la generación de documentos (PDF) hacia Google Drive.
 
----
-
-## Flujo del negocio (resumen)
-1. Usuario captura un pedido en **Nota** (pantalla/formato).
-2. Sheets calcula subtotales y total (Sheets-first).
-3. Apps Script valida y guarda datos en **Base**.
-4. (Opcional) Apps Script genera PDF y lo guarda en Drive.
+Este proyecto utiliza una arquitectura de **Google Apps Script + Google Sheets + HTML (HtmlService)** gestionada profesionalmente desde un entorno de desarrollo local.
 
 ---
 
-## Arquitectura (responsabilidades)
-- **Hoja "Base"**: fuente de verdad (clientes, folios, fechas, anticipo, totales).
-- **Hoja "Inventario"**: productos, precios y unidades (sin lógica).
-- **Hoja "Nota"**: presentación/diseño + fórmulas (puede tener celdas combinadas).
-- **Apps Script (.gs)**: automatización (lectura/escritura, folios, PDF). No calcula dinero.
-- **HTML**: UI (modales). Sin lógica de negocio.
+## 🛠️ Entorno de Desarrollo y Sincronización
+Para mantener la integridad del código y facilitar la mejora continua, el sistema se gestiona localmente:
+- **VS Code**: Editor principal de desarrollo.
+- **Node.js & npm**: Motor para herramientas de automatización.
+- **clasp**: Sincroniza los archivos locales con Google Apps Script.
+- **Git & GitHub**: Control de versiones y respaldo maestro del código.
+
+### Comandos de Operación:
+- `git pull origin main`: Sincronizar cambios desde el repositorio remoto.
+- `clasp push`: Subir el código local al entorno de laboratorio o producción.
 
 ---
 
-## Reglas de cálculo (Sheets primero)
-- Subtotal por producto: `E(fila) = B(fila) * D(fila)`
-- Total: `TOTAL = SUM(E14:E22) - ANTICIPO`
-> Apps Script **no recalcula** montos si Sheets ya lo hace.
+## 📁 Estructura de Almacenamiento (Google Drive)
+El sistema organiza y guarda los documentos generados automáticamente en las siguientes rutas oficiales:
+- 📂 **Cotizaciones**: [Ver Carpeta](https://drive.google.com/drive/u/0/folders/1QJOirou5DohpLnxvNhyPbX9sehcQB2B6)
+- 📂 **Facturas**: [Ver Carpeta](https://drive.google.com/drive/u/0/folders/1SeQ71jZKrswVBqe04YbW9JIW4U2MWOEK)
+- 📂 **Notas de Venta**: [Ver Carpeta](https://drive.google.com/drive/u/0/folders/1L6n7QJm30sssO0BjiOoEaoXxEaZYvf60)
 
 ---
 
-## Estructura del repo
-- `src/config.gs` – Constantes (nombres de hojas, rangos, IDs).
-- `src/main.gs` – Entry points / menú / orquestación.
-- `src/orderService.gs` – Lectura/escritura a Sheets + guardado en Base.
-- `src/selector.html` – UI (HtmlService).
-
-- `AGENTS.md` – Reglas de trabajo para la IA (rol, modos /DEV /BB /HYBRID).
-
----
-
-## Configuración (pendiente / a completar)
-Completar estos valores según tu entorno:
-
-- Spreadsheet:
-  - ID: `1etc3SRm8KMpCyXXWuCYJHJvXkqX7xfLCHLTwgG-evBI/edit?gid=917277036#gid=917277036`
-  - Hojas: `"Base"`, `"Inventario"`, `"Nota"` (nombres exactos)
-
-- Drive:
-  - Carpeta PDF (ID): `1pVW-moG52ka3mwelTOzqpkPPieh8bmub`
-  - Convención nombre PDF: `FOLIO - CLIENTE - FECHA.pdf`
-
-- Rangos clave (ejemplos, ajustar a los reales):
-  - Subtotales: `Nota!E14:E22`
-  - Cantidades: `Nota!B14:B22`
-  - Precios: `Nota!D14:D22`
-  - Anticipo: `Nota!<celda_anticipo>`
-  - Total: `Nota!<celda_total>`
+## 🏗️ Arquitectura del Sistema
+- **Hoja "Base"**: Única fuente de verdad (clientes, folios, fechas, anticipos, totales).
+- **Hoja "Inventario"**: Maestro de productos, precios y unidades.
+- **Hoja "Nota"**: Interfaz de usuario en Sheets para captura y diseño de impresión.
+- **Apps Script (.gs)**: Automatización de lógica (folios, guardado, generación de PDF).
+- **Reglas de Cálculo**: "Sheets-First". Las fórmulas de la hoja mandan; el Script solo lee y transporta los resultados finales.
 
 ---
 
-## Cómo usar (operación diaria)
-- Abrir el Google Sheet del sistema.
-- Capturar pedido en **Nota**.
-- Ejecutar la acción de guardado desde el menú/botón (según implementación).
-- Verificar que el folio se haya guardado en **Base**.
-- (Opcional) Generar PDF y confirmar que se guardó en Drive.
+## ⚠️ Control de Calidad y Mejora Continua (Lean Six Sigma)
+Bajo el rol de **Black Belt**, el sistema prioriza la reducción de defectos y desperdicios (Muda).
+
+### Puntos Críticos a Atender (Poka-Yoke):
+1. **Validación de Estatus**: Implementación de alertas si una nota no cambia a "Entregado" (evitar retrasos en flujo).
+2. **Asignación Obligatoria**: Restricción de generación de documentos si no se ha asignado un responsable de la nota.
+3. **Estandarización de Medidas**: Evitar la suma manual de dimensiones en lonas; cada ítem debe registrarse por separado para precisión en costos y material.
+
+### KPIs Operativos:
+- **Takt Time**: Medición del tiempo de procesamiento mediante el disparador en **Columna M** y registro en **Columna N**.
+- **Tasa de Defectos**: Conteo de folios duplicados o errores de captura por semana.
+- **WIP (Work In Progress)**: Monitoreo de pedidos atrasados o no cerrados.
 
 ---
 
-## Checklist de pruebas rápidas (antes de cambios)
-1. Crear pedido con 2–3 productos y anticipo.
-2. Verificar total calculado por Sheets.
-3. Guardar → confirmar registro correcto en **Base**.
-4. Generar PDF → confirmar nombre y carpeta en Drive.
-5. Confirmar que no se rompió formato/merges en Hoja1.
+## 🚀 Roadmap Incremental
+1. **Fase 1**: Registro robusto en Base + PDF estable en Drive (Actual).
+2. **Fase 2**: Validaciones automáticas (Poka-Yokes) para evitar errores de captura.
+3. **Fase 3**: Tablero Kanban en Sheets para gestión visual de producción.
+4. **Fase 4**: Integración con AppSheet para movilidad y notificaciones en tiempo real.
 
----
----
-
-## Enfoque Black Belt (Mejora continua) – Visión del sistema
-
-Este sistema no solo genera notas/pedidos: también debe evolucionar hacia control operativo y mejora continua del negocio.
-
-### Objetivos de mejora (Lean Six Sigma)
-- Reducir errores en pedidos (productos, precios, folios, anticipos).
-- Reducir tiempo de captura por pedido.
-- Estandarizar el flujo para que sea repetible y difícil de romper.
-- Medir desempeño con KPIs simples y accionables.
-
-### KPIs sugeridos (sin herramientas externas inicialmente)
-**Operación**
-- Pedidos por día / semana
-- Tiempo promedio de captura (si se registra inicio/fin)
-- % pedidos con anticipo
-- Folios duplicados / errores por semana (defectos)
-
-**Finanzas (básico)**
-- Ventas totales por periodo
-- Ticket promedio
-- Top productos / top clientes
-
-**Entrega (si se registra)**
-- Tiempo de entrega promedio
-- Pedidos atrasados (WIP viejo)
-
-### Kanban (evolución incremental)
-El sistema puede incluir una hoja tipo Kanban (o AppSheet) con estados:
-- Capturado → En producción → Listo → Entregado → Cerrado
-
-Reglas:
-- Mantenerlo simple (tablero en Sheets primero).
-- La automatización debe apoyar el proceso, no complicarlo.
-
-### Roadmap incremental (sin reescrituras)
-1) Registro robusto en Base + PDF estable
-2) Hoja de KPIs automáticos (tablas dinámicas / fórmulas)
-3) Hoja Kanban en Sheets (WIP y estados)
-4) AppSheet (cuando el flujo esté estable)
-5) Tableros en Looker Studio (si se requiere visualización ejecutiva)
-
-## Soporte
-Si algo falla, documentar:
-- Acción realizada
-- Folio (si aplica)
-- Captura de pantalla
-=======
-# LOTO Sublimación – Sistema de notas y pedidos
-
-Sistema operativo para capturar pedidos en Google Sheets, guardar la información en la hoja **Base**, consultar precios desde **Inventario**, y generar/exportar PDF a Google Drive.  
-Este proyecto usa **Google Apps Script + Google Sheets + HTML (HtmlService)**. No es una app web tradicional.
-
----
-
-## Flujo del negocio (resumen)
-1. Usuario captura un pedido en **Nota** (pantalla/formato).
-2. Sheets calcula subtotales y total (Sheets-first).
-3. Apps Script valida y guarda datos en **Base**.
-4. (Opcional) Apps Script genera PDF y lo guarda en Drive.
-
----
-
-## Arquitectura (responsabilidades)
-- **Hoja "Base"**: fuente de verdad (clientes, folios, fechas, anticipo, totales).
-- **Hoja "Inventario"**: productos, precios y unidades (sin lógica).
-- **Hoja "Nota"**: presentación/diseño + fórmulas (puede tener celdas combinadas).
-- **Apps Script (.gs)**: automatización (lectura/escritura, folios, PDF). No calcula dinero.
-- **HTML**: UI (modales). Sin lógica de negocio.
-
----
-
-## Reglas de cálculo (Sheets primero)
-- Subtotal por producto: `E(fila) = B(fila) * D(fila)`
-- Total: `TOTAL = SUM(E14:E22) - ANTICIPO`
-> Apps Script **no recalcula** montos si Sheets ya lo hace.
-
----
-
-## Estructura del repo
-- `src/config.gs` – Constantes (nombres de hojas, rangos, IDs).
-- `src/main.gs` – Entry points / menú / orquestación.
-- `src/orderService.gs` – Lectura/escritura a Sheets + guardado en Base.
-- `src/selector.html` – UI (HtmlService).
-
-- `AGENTS.md` – Reglas de trabajo para la IA (rol, modos /DEV /BB /HYBRID).
-
----
-
-## Configuración (pendiente / a completar)
-Completar estos valores según tu entorno:
-
-- Spreadsheet:
-  - ID: `1etc3SRm8KMpCyXXWuCYJHJvXkqX7xfLCHLTwgG-evBI/edit?gid=917277036#gid=917277036`
-  - Hojas: `"Base"`, `"Inventario"`, `"Nota"` (nombres exactos)
-
-- Drive:
-  - Carpeta PDF (ID): `1pVW-moG52ka3mwelTOzqpkPPieh8bmub`
-  - Convención nombre PDF: `FOLIO - CLIENTE - FECHA.pdf`
-
-- Rangos clave (ejemplos, ajustar a los reales):
-  - Subtotales: `Nota!E14:E22`
-  - Cantidades: `Nota!B14:B22`
-  - Precios: `Nota!D14:D22`
-  - Anticipo: `Nota!<celda_anticipo>`
-  - Total: `Nota!<celda_total>`
-
----
-
-## Cómo usar (operación diaria)
-- Abrir el Google Sheet del sistema.
-- Capturar pedido en **Nota**.
-- Ejecutar la acción de guardado desde el menú/botón (según implementación).
-- Verificar que el folio se haya guardado en **Base**.
-- (Opcional) Generar PDF y confirmar que se guardó en Drive.
-
----
-
-## Checklist de pruebas rápidas (antes de cambios)
-1. Crear pedido con 2–3 productos y anticipo.
-2. Verificar total calculado por Sheets.
-3. Guardar → confirmar registro correcto en **Base**.
-4. Generar PDF → confirmar nombre y carpeta en Drive.
-5. Confirmar que no se rompió formato/merges en Hoja1.
-
----
----
-
-## Enfoque Black Belt (Mejora continua) – Visión del sistema
-
-Este sistema no solo genera notas/pedidos: también debe evolucionar hacia control operativo y mejora continua del negocio.
-
-### Objetivos de mejora (Lean Six Sigma)
-- Reducir errores en pedidos (productos, precios, folios, anticipos).
-- Reducir tiempo de captura por pedido.
-- Estandarizar el flujo para que sea repetible y difícil de romper.
-- Medir desempeño con KPIs simples y accionables.
-
-### KPIs sugeridos (sin herramientas externas inicialmente)
-**Operación**
-- Pedidos por día / semana
-- Tiempo promedio de captura (si se registra inicio/fin)
-- % pedidos con anticipo
-- Folios duplicados / errores por semana (defectos)
-
-**Finanzas (básico)**
-- Ventas totales por periodo
-- Ticket promedio
-- Top productos / top clientes
-
-**Entrega (si se registra)**
-- Tiempo de entrega promedio
-- Pedidos atrasados (WIP viejo)
-
-### Kanban (evolución incremental)
-El sistema puede incluir una hoja tipo Kanban (o AppSheet) con estados:
-- Capturado → En producción → Listo → Entregado → Cerrado
-
-Reglas:
-- Mantenerlo simple (tablero en Sheets primero).
-- La automatización debe apoyar el proceso, no complicarlo.
-
-### Roadmap incremental (sin reescrituras)
-1) Registro robusto en Base + PDF estable
-2) Hoja de KPIs automáticos (tablas dinámicas / fórmulas)
-3) Hoja Kanban en Sheets (WIP y estados)
-4) AppSheet (cuando el flujo esté estable)
-5) Tableros en Looker Studio (si se requiere visualización ejecutiva)
-
-## Soporte
-Si algo falla, documentar:
-- Acción realizada
-- Folio (si aplica)
-- Captura de pantalla
->>>>>>> ce10bbdc9a2a049dd9bdd4fce27acb284fcd83f8
-- Logs relevantes (si existen)
+## Soporte y Documentación
+En caso de fallo, documentar:
+1. Acción realizada.
+2. Folio afectado.
+3. Captura de pantalla del error en consola o interfaz.
