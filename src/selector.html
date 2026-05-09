@@ -21,7 +21,8 @@
     }
     .title{margin:0;font-size:18px;font-weight:900}
 
-    .phoneField{
+    .phoneField,
+    .responsableField{
       margin:4px 0 10px;
       background:#fff;
       border:1px solid rgba(0,0,0,.12);
@@ -31,19 +32,22 @@
       flex-direction:column;
       gap:6px;
     }
-    .phoneField label{
+    .phoneField label,
+    .responsableField label{
       font-size:11px;
       font-weight:800;
       color:#666;
       text-transform:uppercase;
       letter-spacing:.3px;
     }
-    .phoneField input{
+    .phoneField input,
+    .responsableField select{
       border:1px solid rgba(0,0,0,.14);
       border-radius:8px;
       padding:6px 8px;
       font-size:13px;
       outline:none;
+      background:#fff;
     }
 
     .dateRow{
@@ -231,6 +235,13 @@
       <h2 class="title"></h2>
     </div>
 
+    <div class="responsableField">
+      <label for="responsablePedido">👤 Responsable</label>
+      <select id="responsablePedido">
+        <option value="">Selecciona un responsable</option>
+      </select>
+    </div>
+
     <div class="phoneField">
       <label for="telefonoCliente">📱 Número de teléfono</label>
       <input id="telefonoCliente" type="tel" inputmode="numeric" placeholder="Ej. 9611234567" />
@@ -288,7 +299,6 @@
     </div>
   </div>
 
-
   <div class="phoneConfirmBackdrop" id="phoneConfirm">
     <div class="confirmCard">
       <h3 class="confirmTitle">📱 Teléfono no capturado</h3>
@@ -296,6 +306,17 @@
       <div class="confirmActions">
         <button class="btnGhost" id="phoneCancelBtn">Cancelar</button>
         <button class="btnPink" id="phoneConfirmBtn">Guardar sin teléfono</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirmBackdrop" id="emptyConfirm">
+    <div class="confirmCard">
+      <h3 class="confirmTitle">⚠️ Sin productos</h3>
+      <p class="confirmText">¿Estás seguro que deseas guardar sin selección? Se limpiarán los productos de esta fila.</p>
+      <div class="confirmActions">
+        <button class="btnGhost" id="emptyCancelBtn">Cancelar</button>
+        <button class="btnPink" id="emptyConfirmBtn">Sí, guardar vacío</button>
       </div>
     </div>
   </div>
@@ -333,12 +354,18 @@
       dialog.classList.toggle('open', open);
     }
 
-    function priceTier(item, qty){
-      const q = Number(qty) || 0;
-      if (q >= 12 && item.precio12 > 0) return { p: item.precio12, tag: '12+' };
-      if (q >= 6  && item.precio6  > 0) return { p: item.precio6,  tag: '6+' };
-      return { p: item.precioBase, tag: '' };
+    function toggleEmptyConfirm(open) {
+      const dialog = document.getElementById('emptyConfirm');
+      dialog.classList.toggle('open', open);
     }
+
+    function priceTier(item, qty){
+  const q = Number(qty) || 0;
+  if (q >= 50 && item.precio50 > 0) return { p: item.precio50, tag: '50+' };
+  if (q >= 12 && item.precio12 > 0) return { p: item.precio12, tag: '12+' };
+  if (q >= 6  && item.precio6  > 0) return { p: item.precio6,  tag: '6+' };
+  return { p: item.precioBase, tag: '' };
+}
 
     let items = [];
     const state = new Map();
@@ -509,9 +536,37 @@
       document.getElementById('pill').textContent = `${countItems} productos`;
       document.getElementById('summary').textContent = `${countItems} productos en selección`;
       document.getElementById('total').textContent = fmt.format(total);
-      document.getElementById('save').disabled = (countItems === 0);
+      document.getElementById('save').disabled = false;
 
       renderCartPanel();
+    }
+
+    function renderResponsables(responsables, seleccionado){
+      const select = document.getElementById('responsablePedido');
+      const lista = Array.from(new Set((responsables || [])
+        .map(x => String(x || '').trim())
+        .filter(Boolean)));
+
+      const actual = String(seleccionado || '').trim();
+      if (actual && !lista.includes(actual)) {
+        lista.unshift(actual);
+      }
+
+      select.innerHTML = '';
+
+      const optionDefault = document.createElement('option');
+      optionDefault.value = '';
+      optionDefault.textContent = 'Selecciona un responsable';
+      select.appendChild(optionDefault);
+
+      lista.forEach(nombre => {
+        const opt = document.createElement('option');
+        opt.value = nombre;
+        opt.textContent = nombre;
+        select.appendChild(opt);
+      });
+
+      select.value = actual;
     }
 
     function applyFilter(){
@@ -548,20 +603,24 @@
       if (e.target.id === 'clearConfirm') toggleClearConfirm(false);
     });
 
+    document.getElementById('emptyCancelBtn').addEventListener('click', () => {
+      toggleEmptyConfirm(false);
+    });
+
+    document.getElementById('emptyConfirm').addEventListener('click', (e) => {
+      if (e.target.id === 'emptyConfirm') toggleEmptyConfirm(false);
+    });
+
     document.getElementById('save').addEventListener('click', () => {
       const seleccion = [];
       for (const [nombre, qty] of state.entries()){
         if (qty > 0) seleccion.push({ nombre, cantidad: qty });
       }
 
+      const responsable = document.getElementById('responsablePedido').value.trim();
       const telefono = document.getElementById('telefonoCliente').value.trim();
       const fechaPedido = document.getElementById('fechaPedido').value;
       const fechaEntrega = document.getElementById('fechaEntrega').value;
-
-      if (!fechaPedido || !fechaEntrega) {
-        alert('Selecciona la fecha de inicio de pedido y la fecha de entrega antes de guardar.');
-        return;
-      }
 
       const guardarSeleccion = () => {
         const btn = document.getElementById('save');
@@ -577,11 +636,47 @@
           })
           .guardarSeleccionProductos({
             items: seleccion,
+            responsable,
             telefono,
             fechaPedido,
             fechaEntrega
           });
       };
+
+      if (seleccion.length === 0) {
+        toggleEmptyConfirm(true);
+
+        const onConfirmEmpty = () => {
+          cleanupEmpty();
+          toggleEmptyConfirm(false);
+          guardarSeleccion();
+        };
+
+        const onCancelEmpty = () => {
+          cleanupEmpty();
+          toggleEmptyConfirm(false);
+        };
+
+        const onBackdropEmpty = (e) => {
+          if (e.target.id === 'emptyConfirm') onCancelEmpty();
+        };
+
+        const cleanupEmpty = () => {
+          document.getElementById('emptyConfirmBtn').removeEventListener('click', onConfirmEmpty);
+          document.getElementById('emptyCancelBtn').removeEventListener('click', onCancelEmpty);
+          document.getElementById('emptyConfirm').removeEventListener('click', onBackdropEmpty);
+        };
+
+        document.getElementById('emptyConfirmBtn').addEventListener('click', onConfirmEmpty);
+        document.getElementById('emptyCancelBtn').addEventListener('click', onCancelEmpty);
+        document.getElementById('emptyConfirm').addEventListener('click', onBackdropEmpty);
+        return;
+      }
+
+      if (!fechaPedido || !fechaEntrega) {
+        alert('Selecciona la fecha de inicio de pedido y la fecha de entrega antes de guardar.');
+        return;
+      }
 
       if (!telefono) {
         togglePhoneConfirm(true);
@@ -620,6 +715,7 @@
       google.script.run
         .withSuccessHandler((sel) => {
           const pre = (sel && sel.items) ? sel.items : [];
+          const responsableActual = (sel && sel.responsable) ? sel.responsable : '';
           document.getElementById('telefonoCliente').value = (sel && sel.telefono) ? sel.telefono : '';
           document.getElementById('fechaPedido').value = (sel && sel.fechaPedido) ? sel.fechaPedido : '';
           document.getElementById('fechaEntrega').value = (sel && sel.fechaEntrega) ? sel.fechaEntrega : '';
@@ -630,22 +726,29 @@
           });
 
           google.script.run
-            .withSuccessHandler((data) => {
-              items = (data || []).map(x => ({
-                nombre: x.nombre,
-                precioBase: Number(x.precioBase) || 0,
-                unidad: x.unidad || 'PZ',
-                precio6: Number(x.precio6) || 0,
-                precio12: Number(x.precio12) || 0
-              }));
+            .withSuccessHandler((responsables) => {
+              renderResponsables(responsables, responsableActual);
 
-              itemsByName.clear();
-              items.forEach(it => itemsByName.set(it.nombre, it));
+              google.script.run
+                .withSuccessHandler((data) => {
+                  items = (data || []).map(x => ({
+  nombre: x.nombre,
+  precioBase: Number(x.precioBase) || 0,
+  unidad: x.unidad || 'PZ',
+  precio6: Number(x.precio6) || 0,
+  precio12: Number(x.precio12) || 0,
+  precio50: Number(x.precio50) || 0
+}));
 
-              buildList(items);
-              updateSummary();
+                  itemsByName.clear();
+                  items.forEach(it => itemsByName.set(it.nombre, it));
+
+                  buildList(items);
+                  updateSummary();
+                })
+                .obtenerInventarioParaUI();
             })
-            .obtenerInventarioParaUI();
+            .obtenerResponsablesParaUI();
         })
         .obtenerSeleccionActualParaUI();
     }
