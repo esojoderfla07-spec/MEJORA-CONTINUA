@@ -1,5 +1,4 @@
 {
-  "timeZone": "America/Mexico_City",
-  "exceptionLogging": "STACKDRIVER",
-  "runtimeVersion": "V8"
+  "scriptId": "1okPrhlBfRF_VuUlJijnwbIkhGsVgKBx6oLLrl8ricjw_kJW0LxNUsYLE",
+  "rootDir": "src"
 }
