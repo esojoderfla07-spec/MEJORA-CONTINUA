@@ -1,0 +1,3 @@
+git add .
+git commit -m "feat: implementacion de timestamp y limpieza de conflictos"
+git push origin feature/mejora-black-belt
