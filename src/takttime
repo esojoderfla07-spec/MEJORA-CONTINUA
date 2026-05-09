@@ -1,0 +1,19 @@
+function gestionarTimestampEntrega(e) {
+  const sheet = e.source.getActiveSheet();
+  const range = e.range;
+
+  // Si no es la hoja Base, no hacemos nada
+  if (sheet.getName() !== CFG.SHEETS.BASE) return;
+
+  // Si el cambio es en la columna de la casilla (M / 13)
+  if (range.getColumn() === CFG.BASE_COL.CHECKBOX_ENTREGA) {
+    const row = range.getRow();
+    const celdaFecha = sheet.getRange(row, CFG.BASE_COL.FECHA_ENTREGA_REAL);
+
+    if (range.getValue() === true) {
+      celdaFecha.setValue(new Date()).setNumberFormat("dd/mm/yyyy HH:mm");
+    } else {
+      celdaFecha.clearContent();
+    }
+  }
+}
